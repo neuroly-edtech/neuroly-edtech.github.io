@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduInclusiva - Aprendizagem para Todos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
+            color: #2c3e50;
+            overflow-x: hidden;
+        }
+
+        /* Page Transitions */
+        .page {
+            display: none;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .page-transition {
+            animation: pageSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes pageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 5%;
+            background: rgba(248, 249, 255, 0.95);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #2c3e50;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #3498db;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: fixed;
+            top: 100px;
+            left: 5%;
+            background: rgba(248, 249, 255, 0.9);
+            border: 1px solid #e3f2fd;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+            z-index: 999;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: rgba(248, 249, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        }
+
+        .back-btn.show {
+            display: flex;
+        }
+
+        /* Enhanced Carousel Header */
+        .carousel-container {
+            margin-top: 80px;
+            height: 60vh;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 20px 40px rgba(52, 152, 219, 0.15);
+            background: linear-gradient(135deg, #e8f4fd, #dbeafe);
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            position: relative;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #e8f4fd, #dbeafe);
+        }
+
+        /* Modern blur and overlay effects */
+        .carousel-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 40%, rgba(52, 152, 219, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, rgba(52, 152, 219, 0.03) 0%, rgba(46, 204, 113, 0.05) 100%);
+            z-index: 1;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .carousel-slide::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.05) 0%, transparent 70%);
+            animation: shimmer 6s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                transform: rotate(0deg) translate(-50%, -50%);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+                transform: rotate(180deg) translate(-50%, -50%);
+            }
+        }
+
+        /* Slide content with enhanced animations */
+        .slide-content {
+            text-align: center;
+            z-index: 3;
+            padding: 2rem;
+            position: relative;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 800px;
+        }
+
+        .carousel-slide.active .slide-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .slide-content h2 {
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+        }
+
+        .carousel-slide.active .slide-content h2 {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .slide-content p {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+            line-height: 1.6;
+        }
+
+        .carousel-slide.active .slide-content p {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Enhanced Carousel Navigation */
+        .carousel-nav {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 4;
+            padding: 15px 25px;
+            background: rgba(248, 249, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(52, 152, 219, 0.4);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: #3498db;
+            border-radius: 50%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translate(-50%, -50%);
+        }
+
+        .nav-dot.active::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-dot.active {
+            transform: scale(1.3);
+            background: rgba(52, 152, 219, 0.2);
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .nav-dot:hover {
+            transform: scale(1.2);
+            background: rgba(52, 152, 219, 0.6);
+        }
+
+        /* Enhanced Carousel Arrows */
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(248, 249, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #3498db;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
+        }
+
+        .carousel-arrow:hover {
+            background: rgba(248, 249, 255, 1);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 15px 40px rgba(52, 152, 219, 0.25);
+            color: #2980b9;
+        }
+
+        .carousel-arrow:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .carousel-arrow.prev {
+            left: 30px;
+        }
+
+        .carousel-arrow.next {
+            right: 30px;
+        }
+
+        /* Slide transition effects */
+        .carousel-slide:not(.active) .slide-content {
+            filter: blur(2px);
+            transform: translateY(30px) scale(0.95);
+            opacity: 0.3;
+        }
+
+        /* Progress indicator */
+        .carousel-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            transition: width 5s linear;
+            z-index: 4;
+        }
+
+        /* Solutions Showcase Section */
+        .solutions-showcase {
+            padding: 80px 5%;
+            background: linear-gradient(135deg, #ffffff, #f8f9ff);
+        }
+
+        .showcase-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .showcase-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .showcase-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff;
+            aspect-ratio: 16/10;
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.1);
+            border: 1px solid rgba(52, 152, 219, 0.1);
+        }
+
+        .showcase-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(52, 152, 219, 0.2);
+        }
+
+        .showcase-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.8), rgba(46, 204, 113, 0.8));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .showcase-item:hover::before {
+            opacity: 1;
+        }
+
+        .showcase-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            text-align: center;
+            z-index: 2;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .showcase-item:hover .showcase-overlay {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .showcase-overlay .icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .showcase-overlay .title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .showcase-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #3498db;
+            background: linear-gradient(135deg, #f8f9ff, #e8f4fd);
+            padding: 2rem;
+        }
+
+        .showcase-placeholder .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        .showcase-placeholder .title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            opacity: 0.8;
+            text-align: center;
+        }
+
+        .showcase-placeholder .description {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            text-align: center;
+            margin-top: 0.5rem;
+            max-width: 250px;
+        }
+
+        /* Specialists Section */
+        .specialists {
+            padding: 80px 5%;
+            background: #ffffff;
+        }
+
+        .specialists-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .specialists-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .specialists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .specialist-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #f8f9ff, #e8f4fd);
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(52, 152, 219, 0.1);
+        }
+
+        .specialist-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(46, 204, 113, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .specialist-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(52, 152, 219, 0.15);
+        }
+
+        .specialist-item:hover::before {
+            opacity: 1;
+        }
+
+        .specialist-placeholder {
+            text-align: center;
+            color: #3498db;
+            z-index: 2;
+            padding: 2rem;
+        }
+
+        .specialist-placeholder .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        .specialist-placeholder .name {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .specialist-placeholder .specialty {
+            font-size: 1rem;
+            opacity: 0.7;
+            color: #666;
+        }
+
+        /* Specialist Page Styles */
+        .specialist-page {
+            padding: 120px 5% 80px;
+            background: #ffffff;
+            min-height: 100vh;
+        }
+
+        .specialist-hero {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .specialist-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e8f4fd, #dbeafe);
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.15);
+            transition: transform 0.3s ease;
+            border: 3px solid rgba(52, 152, 219, 0.1);
+        }
+
+        .specialist-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .specialist-name {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .specialist-role {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .specialist-bio {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 4rem;
+        }
+
+        .specialist-expertise {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .expertise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .expertise-item {
+            background: linear-gradient(135deg, #f8f9ff, #ffffff);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 1px solid rgba(52, 152, 219, 0.1);
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .expertise-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(52, 152, 219, 0.15);
+        }
+
+        .expertise-item .icon {
+            font-size: 2.5rem;
+            opacity: 0.7;
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+
+        .expertise-item .title {
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .specialist-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9ff, #ffffff);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(52, 152, 219, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 5%;
+            background: linear-gradient(135deg, #f8f9ff, #ffffff);
+        }
+
+        .features-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(52, 152, 219, 0.1);
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(52, 152, 219, 0.15);
+            border-color: rgba(52, 152, 219, 0.2);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #e8f4fd, #dbeafe);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: #3498db;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Modal for Image Zoom */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44, 62, 80, 0.95);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 95vw;
+            height: 95vh;
+            background: transparent;
+            border-radius: 0;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show .modal-content {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 3rem;
+            position: relative;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            color: #ffffff;
+            margin-top: 1rem;
+            font-weight: 300;
+            text-align: center;
+            background: rgba(44, 62, 80, 0.8);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(44, 62, 80, 0.8);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 2rem;
+            color: #ffffff;
+            transition: all 0.3s ease;
+            z-index: 2001;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 4%;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+
+            .back-btn {
+                left: 4%;
+                padding: 10px 16px;
+                font-size: 0.85rem;
+            }
+
+            .carousel-container {
+                height: 50vh;
+                margin-top: 70px;
+            }
+
+            .slide-content h2 {
+                font-size: 2rem;
+            }
+            
+            .slide-content p {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+
+            .showcase-title, .specialists-title {
+                font-size: 2.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .showcase-grid, .specialists-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .showcase-item {
+                aspect-ratio: 16/9;
+            }
+
+            .specialist-page {
+                padding: 100px 4% 60px;
+            }
+
+            .specialist-name {
+                font-size: 2rem;
+            }
+
+            .specialist-avatar {
+                width: 120px;
+                height: 120px;
+                font-size: 3rem;
+            }
+
+            .expertise-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .carousel-arrow.prev {
+                left: 15px;
+            }
+
+            .carousel-arrow.next {
+                right: 15px;
+            }
+            
+            .features {
+                padding: 60px 4%;
+            }
+            
+            .features-title {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                gap: 1.5rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 3%;
+            }
+            
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .back-btn {
+                left: 3%;
+                top: 90px;
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .carousel-container {
+                height: 40vh;
+                margin-top: 60px;
+            }
+            
+            .slide-content h2 {
+                font-size: 1.8rem;
+            }
+            
+            .slide-content p {
+                font-size: 0.9rem;
+            }
+            
+            .showcase-title, .specialists-title {
+                font-size: 2rem;
+            }
+            
+            .showcase-grid, .specialists-grid {
+                gap: 1rem;
+            }
+            
+            .showcase-item {
+                aspect-ratio: 4/3;
+            }
+            
+            .specialist-page {
+                padding: 80px 3% 40px;
+            }
+
+            .specialist-name {
+                font-size: 1.8rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .features {
+                padding: 40px 3%;
+            }
+            
+            .features-title {
+                font-size: 1.8rem;
+            }
+            
+            .feature-card {
+                padding: 1.2rem;
+            }
+            
+            .feature-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+            
+            .carousel-arrow {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+            
+            .carousel-arrow.prev {
+                left: 10px;
+            }
+
+            .carousel-arrow.next {
+                right: 10px;
+            }
+            
+            .nav-dot {
+                width: 10px;
+                height: 10px;
+            }
+            
+            .carousel-nav {
+                gap: 10px;
+                bottom: 20px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e8f4fd;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #ecf0f1;
+            padding: 60px 5% 0;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3.footer-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #3498db;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #3498db, #5dade2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .footer-description {
+            color: #bdc3c7;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            color: #bdc3c7;
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .social-link:hover {
+            color: #3498db;
+            background: rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .footer-links a:hover {
+            color: #3498db;
+            padding-left: 0.5rem;
+        }
+
+        .footer-contact p {
+            margin-bottom: 0.8rem;
+            color: #bdc3c7;
+            font-size: 0.95rem;
+        }
+
+        .footer-certifications {
+            margin-top: 1.5rem;
+        }
+
+        .footer-certifications small {
+            color: #95a5a6;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #34495e;
+            padding: 2rem 0;
+            margin-top: 40px;
+        }
+
+        .footer-bottom-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-bottom p {
+            color: #95a5a6;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .legal-link {
+            color: #95a5a6;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .legal-link:hover {
+            color: #3498db;
+        }
+
+        /* Footer Responsive */
+        @media (max-width: 768px) {
+            .footer {
+                padding: 40px 4% 0;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .footer-social {
+                justify-content: center;
+            }
+
+            .footer-bottom-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .footer-legal {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer {
+                padding: 30px 3% 0;
+            }
+
+            .footer-logo {
+                font-size: 1.5rem;
+            }
+
+            .footer-legal {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo" onclick="showPage('home')">EduInclusiva</div>
+            <ul class="nav-links">
+                <li><a onclick="showPage('home')">Início</a></li>
+                <li><a onclick="scrollToSection('specialists')">Especialistas</a></li>
+                <li><a onclick="scrollToSection('features')">Soluções</a></li>
+                <li><a onclick="showPage('contact')">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <button class="back-btn" id="backBtn" onclick="showPage('home')">
+        ← Voltar ao Início
+    </button>
+
+    <!-- Home Page -->
+    <div class="page active" id="home">
+        <!-- Enhanced Carousel Header -->
+        <section class="carousel-container">
+            <div class="carousel">
+                <div class="carousel-slide active">
+                    <div class="slide-content">
+                        <h2>Aprendizagem Inclusiva</h2>
+                        <p>Tecnologia educacional desenvolvida especialmente para estudantes com dislexia, TDAH, TEA e outras necessidades de aprendizagem. Transformamos desafios em oportunidades de crescimento.</p>
+                    </div>
+                    <div class="carousel-progress"></div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="slide-content">
+                        <h2>Metodologias Adaptadas</h2>
+                        <p>Nossa plataforma utiliza técnicas de ensino multissensoriais, gamificação terapêutica e inteligência artificial para personalizar o aprendizado de cada estudante.</p>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="slide-content">
+                        <h2>Resultados Comprovados</h2>
+                        <p>Mais de 15.000 estudantes já melhoraram seu desempenho acadêmico e autoestima através das nossas soluções inclusivas baseadas em evidências científicas.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="carousel-arrow prev" onclick="changeSlide(-1)">‹</button>
+            <button class="carousel-arrow next" onclick="changeSlide(1)">›</button>
+            
+            <div class="carousel-nav">
+                <div class="nav-dot active" onclick="currentSlide(1)"></div>
+                <div class="nav-dot" onclick="currentSlide(2)"></div>
+                <div class="nav-dot" onclick="currentSlide(3)"></div>
+            </div>
+        </section>
+
+        <!-- Solutions Showcase Section -->
+        <section class="solutions-showcase" id="showcase">
+            <h2 class="showcase-title">Nossas Soluções</h2>
+            <p class="showcase-subtitle">Ferramentas especializadas para diferentes necessidades de aprendizagem</p>
+            <div class="showcase-grid">
+                <div class="showcase-item" onclick="openFullscreenModal(this)">
+                    <div class="showcase-placeholder">
+                        <div class="icon">🧠</div>
+                        <div class="title">DysLex Assistant</div>
+                        <div class="description">IA que adapta textos para facilitar leitura em casos de dislexia</div>
+                    </div>
+                    <div class="showcase-overlay">
+                        <div class="icon">🧠</div>
+                        <div class="title">DysLex Assistant</div>
+                    </div>
+                </div>
+                <div class="showcase-item" onclick="openFullscreenModal(this)">
+                    <div class="showcase-placeholder">
+                        <div class="icon">🎯</div>
+                        <div class="title">Focus Builder</div>
+                        <div class="description">Exercícios gamificados para desenvolver atenção e concentração</div>
+                    </div>
+                    <div class="showcase-overlay">
+                        <div class="icon">🎯</div>
+                        <div class="title">Focus Builder</div>
+                    </div>
+                </div>
+                <div class="showcase-item" onclick="openFullscreenModal(this)">
+                    <div class="showcase-placeholder">
+                        <div class="icon">🌈</div>
+                        <div class="title">Spectrum Learn</div>
+                        <div class="description">Ambiente de aprendizagem adaptado para estudantes no espectro autista</div>
+                    </div>
+                    <div class="showcase-overlay">
+                        <div class="icon">🌈</div>
+                        <div class="title">Spectrum Learn</div>
+                    </div>
+                </div>
+                <div class="showcase-item" onclick="openFullscreenModal(this)">
+                    <div class="showcase-placeholder">
+                        <div class="icon">📚</div>
+                        <div class="title">MultiSense Reading</div>
+                        <div class="description">Leitura multissensorial com áudio, visual e tátil sincronizados</div>
+                    </div>
+                    <div class="showcase-overlay">
+                        <div class="icon">📚</div>
+                        <div class="title">MultiSense Reading</div>
+                    </div>
+                </div>
+                <div class="showcase-item" onclick="openFullscreenModal(this)">
+                    <div class="showcase-placeholder">
+                        <div class="icon">🧩</div>
+                        <div class="title">Cognitive Trainer</div>
+                        <div class="description">Jogos terapêuticos para fortalecer funções executivas</div>
+                    </div>
+                    <div class="showcase-overlay">
+                        <div class="icon">🧩</div>
+                        <div class="title">Cognitive Trainer</div>
+                    </div>
+                </div>
+                <div class="showcase-item" onclick="openFullscreenModal(this)">
+                    <div class="showcase-placeholder">
+                        <div class="icon">📊</div>
+                        <div class="title">Progress Analytics</div>
+                        <div class="description">Dashboard para acompanhar evolução e identificar padrões</div>
+                    </div>
+                    <div class="showcase-overlay">
+                        <div class="icon">📊</div>
+                        <div class="title">Progress Analytics</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Specialists Section -->
+        <section class="specialists" id="specialists">
+            <h2 class="specialists-title">Nossa Equipe</h2>
+            <p class="specialists-subtitle">Especialistas em neurociência, psicopedagogia e tecnologia educacional</p>
+            <div class="specialists-grid">
+                <div class="specialist-item" onclick="showSpecialistPage('ana-neuroped')">
+                    <div class="specialist-placeholder">
+                        <div class="icon">🧠</div>
+                        <div class="name">Dra. Ana Carvalho</div>
+                        <div class="specialty">Neuropsicopedagoga</div>
+                    </div>
+                </div>
+                <div class="specialist-item" onclick="showSpecialistPage('carlos-dev')">
+                    <div class="specialist-placeholder">
+                        <div class="icon">💻</div>
+                        <div class="name">Carlos Silva</div>
+                        <div class="specialty">Desenvolvedor EdTech</div>
+                    </div>
+                </div>
+                <div class="specialist-item" onclick="showSpecialistPage('maria-psicol')">
+                    <div class="specialist-placeholder">
+                        <div class="icon">🎯</div>
+                        <div class="name">Maria Santos</div>
+                        <div class="specialty">Psicóloga TDAH</div>
+                    </div>
+                </div>
+                <div class="specialist-item" onclick="showSpecialistPage('joao-tea')">
+                    <div class="specialist-placeholder">
+                        <div class="icon">🌈</div>
+                        <div class="name">João Oliveira</div>
+                        <div class="specialty">Especialista TEA</div>
+                    </div>
+                </div>
+                <div class="specialist-item" onclick="showSpecialistPage('lucia-fono')">
+                    <div class="specialist-placeholder">
+                        <div class="icon">🗣️</div>
+                        <div class="name">Lúcia Mendes</div>
+                        <div class="specialty">Fonoaudióloga</div>
+                    </div>
+                </div>
+                <div class="specialist-item" onclick="showSpecialistPage('pedro-ux')">
+                    <div class="specialist-placeholder">
+                        <div class="icon">🎨</div>
+                        <div class="name">Pedro Costa</div>
+                        <div class="specialty">UX Designer Inclusivo</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <h2 class="features-title">Por que Escolher a EduInclusiva?</h2>
+            <p class="features-subtitle">Tecnologia baseada em evidências científicas e desenvolvida por especialistas</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔬</div>
+                    <h3>Base Científica</h3>
+                    <p>Todas as nossas soluções são desenvolvidas com base em pesquisas em neurociência cognitiva e psicopedagogia, garantindo eficácia comprovada no apoio a diferentes necessidades de aprendizagem.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Personalização IA</h3>
+                    <p>Nossa inteligência artificial analisa o perfil único de cada estudante, adaptando automaticamente conteúdos, metodologias e ritmo de aprendizagem para maximizar o potencial individual.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Suporte Multidisciplinar</h3>
+                    <p>Equipe integrada de neuropsicopedagogos, psicólogos, fonoaudiólogos e desenvolvedores trabalhando em conjunto para oferecer o melhor apoio educacional inclusivo.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Specialist Pages -->
+    <div class="page" id="specialist-ana-neuroped">
+        <div class="specialist-page">
+            <div class="specialist-hero">
+                <div class="specialist-avatar">🧠</div>
+                <h1 class="specialist-name">Dra. Ana Carvalho</h1>
+                <p class="specialist-role">Neuropsicopedagoga & Diretora Científica</p>
+                <div class="specialist-bio">
+                    <p>Dra. Ana é PhD em Neurociências pela USP e especialista em dificuldades de aprendizagem. Com mais de 15 anos de experiência clínica, ela lidera nossa equipe de pesquisa e desenvolvimento, garantindo que todas as soluções sejam fundamentadas em evidências científicas sólidas e práticas terapêuticas eficazes.</p>
+                </div>
+            </div>
+
+            <div class="specialist-expertise">
+                <h2 class="section-title">Áreas de Especialização</h2>
+                <div class="expertise-grid">
+                    <div class="expertise-item">
+                        <div class="icon">📖</div>
+                        <div class="title">Dislexia e Discalculia</div>
+                    </div>
+                    <div class="expertise-item">
+                        <div class="icon">🧠</div>
+                        <div class="title">Neuroplasticidade</div>
+                    </div>
+                    <div class="expertise-item">
+                        <div class="icon">🔬</div>
+                        <div class="title">Pesquisa Cognitiva</div>
+                    </div>
+                    <div class="expertise-item">
+                        <div class="icon">🎓</div>
+                        <div class="title">Intervenção Educacional</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="specialist-stats">
+                <div class="stat-card">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Casos Atendidos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Anos de Experiência</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">25</div>
+                    <div class="stat-label">Publicações Científicas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page" id="specialist-carlos-dev">
+        <div class="specialist-page">
+            <div class="specialist-hero">
+                <div class="specialist-avatar">💻</div>
+                <h1 class="specialist-name">Carlos Silva</h1>
+                <p class="specialist-role">Desenvolvedor EdTech & CTO</p>
+                <div class="specialist-bio">
+                    <p>Carlos é engenheiro de software especializado em tecnologias educacionais inclusivas. Com mestrado em Ciência da Computação e pós-graduação em Educação Especial, ele desenvolve soluções tecnológicas inovadoras que tornam o aprendizado acessível para todos os tipos de estudantes.</p>
+                </div>
+            </div>
+
+            <div class="specialist-expertise">
+                <h2 class="section-title">Competências Técnicas</h2>
+                <div class="expertise-grid">
+                    <div class="expertise-item">
+                        <div class="icon">🤖</div>
+                        <div class="title">Inteligência Artificial</div>
+                    </div>
+                    <div class="expertise-item">
+                        <div class="icon">📱</div>
+                        <div class="title">Apps Acessíveis</div>
+                    </div>
+                    <div class="expertise-item">
+                        <div class="icon">🎮</div>
+                        <div class="title">Gamificação Terapêutica</div>
+                    </div>
+                    <div class="expertise-item">
+                        <div class="icon">📊</div>
+                        <div class="title">Analytics Educacional</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="specialist-stats">
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Apps Desenvolvidos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Anos em EdTech</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label">Usuários Impactados</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page" id="specialist-maria-psicol">
+        <div class="specialist-page">
+            <div class="specialist-hero">
+                <div class="specialist-avatar">🎯</div>
+                <h1 class="specialist-name">Maria Santos</h1>
+                <p class="specialist-role">Psicóloga Especialista em TDAH</p>
+                <div class="specialist-bio">
+                    <p>Maria é psicóloga clínica com especialização em Transtorno do Déficit de Atenção e Hiperatividade. Ela desenvolve estratégias comportamentais e cognitivas integradas à nossa plataforma tecnológica, ajudando estudantes com TDAH a desenvolverem melhor foco, organização e autorregulação.</p>
+                </div>
+            </div>
+
+            <div class="specialist-expertise">
+                <h2 class="section-title">Especialidades</h2>
+                <div class="expertise-grid">
+                    <div class="expertise-item">
+                        <div class="icon">🎯</div>
+                        <div class="title">Terapia TDAH</div>
+                    </div>
+                    <div class="expertise-item">
+                        <div class="icon">🧘</div>
+                        <div class="title">Mindfulness Infantil</div>
+                    </div>
+                    <div class="expertise-item">
+                        <div class="icon">📋</div>
+                        <div class="title">Funções Executivas</div>
+                    </div>
+                    <div class="expertise-item">
+                        <div class="icon">🏆</div>
+                        <div class="title">Modificação Comportamental</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="specialist-stats">
+                <div class="stat-card">
+                    <div class="stat-number">300+</div>
+                    <div class="stat-label">Crianças Atendidas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Anos de Prática</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">85%</div>
+                    <div class="stat-label">Taxa de Melhoria</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div class="page" id="contact">
+        <div class="specialist-page">
+            <div class="specialist-hero">
+                <div class="specialist-avatar">📧</div>
+                <h1 class="specialist-name">Fale Conosco</h1>
+                <p class="specialist-role">Transforme a educação do seu filho</p>
+                <div class="specialist-bio">
+                    <p>Nossa equipe está pronta para apresentar nossas soluções educacionais inclusivas. Entre em contato e descubra como podemos ajudar seu filho a superar desafios de aprendizagem e alcançar seu pleno potencial acadêmico e pessoal.</p>
+                </div>
+            </div>
+
+            <div class="specialist-expertise">
+                <h2 class="section-title">Canais de Atendimento</h2>
+                <div class="expertise-grid">
+                    <div class="expertise-item">
+                        <div class="icon">📧</div>
+                        <div class="title">contato@eduinclusiva.com</div>
+                    </div>
+                    <div class="expertise-item">
+                        <div class="icon">📱</div>
+                        <div class="title">(11) 9 9999-9999</div>
+                    </div>
+                    <div class="expertise-item">
+                        <div class="icon">💼</div>
+                        <div class="title">LinkedIn EduInclusiva</div>
+                    </div>
+                    <div class="expertise-item">
+                        <div class="icon">🏢</div>
+                        <div class="title">São Paulo - SP</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="specialist-stats">
+                <div class="stat-card">
+                    <div class="stat-number">24h</div>
+                    <div class="stat-label">Tempo de Resposta</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15K+</div>
+                    <div class="stat-label">Estudantes Atendidos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Satisfação das Famílias</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Image Zoom -->
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-image" id="modalImage">
+                <div class="modal-icon">💡</div>
+                <div class="modal-title">Carregando...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">EduInclusiva</div>
+                <p class="footer-description">
+                    Transformando a educação através de tecnologia inclusiva e evidências científicas.
+                </p>
+                <div class="footer-social">
+                    <a href="#" class="social-link">LinkedIn</a>
+                    <a href="#" class="social-link">Instagram</a>
+                    <a href="#" class="social-link">YouTube</a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">Soluções</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="scrollToSection('showcase')">DysLex Assistant</a></li>
+                    <li><a href="#" onclick="scrollToSection('showcase')">Focus Builder</a></li>
+                    <li><a href="#" onclick="scrollToSection('showcase')">Spectrum Learn</a></li>
+                    <li><a href="#" onclick="scrollToSection('showcase')">MultiSense Reading</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">Empresa</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="scrollToSection('specialists')">Nossa Equipe</a></li>
+                    <li><a href="#" onclick="scrollToSection('features')">Metodologia</a></li>
+                    <li><a href="#" onclick="showPage('contact')">Contato</a></li>
+                    <li><a href="#" onclick="showPage('about')">Sobre Nós</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">Contato</h3>
+                <div class="footer-contact">
+                    <p>📧 contato@eduinclusiva.com</p>
+                    <p>📱 (11) 9 9999-9999</p>
+                    <p>📍 São Paulo - SP</p>
+                </div>
+                <div class="footer-certifications">
+                    <small>Certificações: LGPD | ISO 27001 | Acessibilidade WCAG 2.1</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="footer-bottom-content">
+                <p>&copy; 2024 EduInclusiva. Todos os direitos reservados.</p>
+                <div class="footer-legal">
+                    <a href="#" class="legal-link">Política de Privacidade</a>
+                    <a href="#" class="legal-link">Termos de Uso</a>
+                    <a href="#" class="legal-link">Acessibilidade</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentSlideIndex = 0;
+        let autoplayInterval;
+        let isTransitioning = false;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.nav-dot');
+
+        // Page Navigation Functions
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                targetPage.classList.add('page-transition');
+                
+                setTimeout(() => {
+                    targetPage.classList.remove('page-transition');
+                }, 500);
+            }
+            
+            const backBtn = document.getElementById('backBtn');
+            if (pageId === 'home') {
+                backBtn.classList.remove('show');
+                startAutoplay();
+            } else {
+                backBtn.classList.add('show');
+                stopAutoplay();
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showSpecialistPage(specialistId) {
+            showPage(`specialist-${specialistId}`);
+        }
+
+        function scrollToSection(sectionId) {
+            showPage('home');
+            
+            setTimeout(() => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }, 100);
+        }
+
+        // Enhanced Carousel Functions
+        function showSlide(index, direction = 0) {
+            if (isTransitioning) return;
+            
+            isTransitioning = true;
+            const carousel = document.querySelector('.carousel');
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            if (slides[index]) {
+                slides[index].classList.add('active');
+            }
+            if (dots[index]) {
+                dots[index].classList.add('active');
+            }
+            
+            if (carousel) {
+                carousel.style.transform = `translateX(-${index * 100}%)`;
+                
+                const progress = document.querySelector('.carousel-progress');
+                if (progress) {
+                    progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+                }
+            }
+            
+            currentSlideIndex = index;
+            
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 800);
+        }
+
+        function changeSlide(direction) {
+            if (isTransitioning) return;
+            
+            const newIndex = currentSlideIndex + direction;
+            
+            if (newIndex >= slides.length) {
+                showSlide(0, direction);
+            } else if (newIndex < 0) {
+                showSlide(slides.length - 1, direction);
+            } else {
+                showSlide(newIndex, direction);
+            }
+            
+            resetAutoplay();
+        }
+
+        function currentSlide(index) {
+            if (isTransitioning) return;
+            showSlide(index - 1);
+            resetAutoplay();
+        }
+
+        // Autoplay functions
+        function startAutoplay() {
+            stopAutoplay();
+            autoplayInterval = setInterval(() => {
+                const homePage = document.getElementById('home');
+                if (homePage && homePage.classList.contains('active')) {
+                    changeSlide(1);
+                }
+            }, 5000);
+        }
+
+        function stopAutoplay() {
+            if (autoplayInterval) {
+                clearInterval(autoplayInterval);
+                autoplayInterval = null;
+            }
+        }
+
+        function resetAutoplay() {
+            const homePage = document.getElementById('home');
+            if (homePage && homePage.classList.contains('active')) {
+                startAutoplay();
+            }
+        }
+
+        // Modal Functions
+        function openFullscreenModal(element) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            
+            const placeholderTitle = element.querySelector('.showcase-placeholder .title');
+            const placeholderIcon = element.querySelector('.showcase-placeholder .icon');
+            const placeholderDesc = element.querySelector('.showcase-placeholder .description');
+            
+            const icon = placeholderIcon ? placeholderIcon.textContent : '💡';
+            const title = placeholderTitle ? placeholderTitle.textContent : 'Solução Educacional';
+            const description = placeholderDesc ? placeholderDesc.textContent : '';
+            
+            modalImage.innerHTML = `
+                <div style="color: #ffffff; font-size: 8rem; margin-bottom: 2rem;">${icon}</div>
+                <div style="font-size: 2rem; padding: 1rem 2rem; text-align: center;">
+                    <strong>${title}</strong>
+                    ${description ? `<br><span style="font-size: 1.2rem; opacity: 0.8; margin-top: 1rem; display: block;">${description}</span>` : ''}
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            requestAnimationFrame(() => {
+                modal.classList.add('show');
+            });
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            
+            modal.classList.remove('show');
+            
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        // Event Listeners
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+            
+            const homePage = document.getElementById('home');
+            if (homePage && homePage.classList.contains('active')) {
+                if (event.key === 'ArrowLeft') {
+                    changeSlide(-1);
+                } else if (event.key === 'ArrowRight') {
+                    changeSlide(1);
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('home');
+            
+            if (slides[0]) {
+                slides[0].classList.add('active');
+            }
+            if (dots[0]) {
+                dots[0].classList.add('active');
+            }
+            
+            startAutoplay();
+            
+            const progress = document.querySelector('.carousel-progress');
+            if (progress) {
+                progress.style.width = `${(1 / slides.length) * 100}%`;
+            }
+        });
+    </script>
+</body>
+</html> {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+
+            .carousel-arrow
